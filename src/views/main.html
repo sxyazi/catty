@@ -9,9 +9,6 @@
 
 <div class="editor"></div>
 
-<webview id="tester" src="about:block"></webview>
-<webview id="devtool"></webview>
-
 <script>
 
 const editors = []
@@ -26,20 +23,15 @@ createEditor(document.querySelector('.editor')).then(e => {
 
 <script>
 
-const run = require('../module/run')
+const debug = require('../module/debug')
+const { nodeStart, nodeStop } = require('../module/run-node')
+const { browserStart, browserStop } = require('../module/run-browser')
 
-const testerView = document.getElementById('tester')
-const devtoolView = document.getElementById('devtool')
+debug.node(i => nodeStart(editors[i].getValue()))
+debug.browser(i => browserStart(editors[i].getValue()))
 
-run.browser(i => {
-    testerView.reload()
-
-    const browser = testerView.getWebContents()
-    browser.devToolsWebContents = devtoolView.getWebContents()
-    browser.openDevTools()
-
-    testerView.getWebContents().executeJavaScript(editors[i].getValue())
-})
+debug.nodeStop(() => nodeStop())
+debug.browserStop(() => browserStop())
 
 </script>
 

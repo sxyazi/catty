@@ -33,7 +33,12 @@ const template = [
             {
                 label: 'Run',
                 accelerator: 'CmdOrCtrl + R',
-                click: require('../menu/run')
+                click: require('../menu/run-browser')
+            },
+            {
+                label: 'Run with NodeJS',
+                accelerator: 'CmdOrCtrl + Shift + R',
+                click: require('../menu/run-node')
             }
         ]
     }
