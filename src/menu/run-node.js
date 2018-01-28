@@ -1,3 +1,4 @@
+
 module.exports = () => {
-    mainWindow.webContents.send('event-run', { tab: 0, type: 'node' })
+    mainWindow.webContents.send('event-run', { type: 'node' })
 }

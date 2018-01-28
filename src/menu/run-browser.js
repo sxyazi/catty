@@ -1,5 +1,5 @@
 
 module.exports = () => {
-    mainWindow.webContents.send('event-run', { tab: 0, type: 'browser' })
+    mainWindow.webContents.send('event-run', { type: 'browser' })
 }
 

@@ -1,39 +1,42 @@
-const path = require('path')
-const loader = require('monaco-editor/min/vs/loader')
+const monaco = require('./monaco')
 
-const uriFromPath = p => {
-    let pathName = path.resolve(p).replace(/\\/g, '/')
-    if (pathName.length > 0 && pathName.charAt(0) !== '/') {
-        pathName = '/' + pathName
+let ctn, cur, ins = []
+
+const createEditor = (c, n) => {
+
+    // Set the current editor
+    cur = n
+
+    // Hide all other editors
+    for (let x of c.querySelectorAll('editor')) {
+        x.style.display = 'none'
     }
 
-    return encodeURI(`file://${pathName}`)
+    // The instance already exists
+    if (ins[n]) {
+        ins[n].domElement.style = 'block'
+        return
+    }
+
+    let editor = document.createElement('editor')
+    editor.setAttribute('eid', n)
+    c.appendChild(editor)
+
+    editor = c.querySelector(`editor[eid='${n}']`)
+    return monaco(editor)
+        .then(e => ins[n] = e)
+        .then(() => editor.style.display = 'block')
 }
 
-loader.require.config({
-    baseUrl: uriFromPath(path.join(__dirname, '../../node_modules/monaco-editor/min'))
-})
+const destroyEditor = (c, n) => {
+    delete ins[n]
+    c.removeChild(c.querySelector(`editor[eid='${n}']`))
+}
 
-// workaround monaco-css not understanding the environment
-self.module = undefined
+const getEditor = n => ins[n]
+const currentEditor = () => ins[cur]
 
-// workaround monaco-typescript not understanding the environment
-self.process.browser = true
-
-// open the devtools panel
-// const remote = require('electron').remote
-// remote.getCurrentWindow().openDevTools()
-
-module.exports = c => new Promise(resolve => {
-    loader.require([ 'vs/editor/editor.main' ], () => {
-        resolve(monaco.editor.create(c, {
-            value: [
-                'function x() {',
-                '\tconsole.log("Hello world!")',
-                '}'
-            ].join('\n'),
-    
-            language: 'javascript'
-        }))
-    })
-})
+module.exports = {
+    createEditor, destroyEditor,
+    getEditor, currentEditor
+}
