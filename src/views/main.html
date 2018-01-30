@@ -13,7 +13,11 @@
 <script>
 
 const { initTab, addTab, removeTab } = require('../module/tab')
-const { createEditor, destroyEditor, currentEditor } = require('../module/editor')
+const {
+    createEditor, destroyEditor,
+    getCurrent, currentEditor, resizeEditor
+} = require('../module/editor')
+
 
 const editor = document.querySelector('#editor')
 
@@ -28,6 +32,9 @@ initTab(document.querySelector('#tab'), (n, typ) => {
 
     }
 })
+
+window.addEventListener('resize', 
+    () => resizeEditor(getCurrent()))
 
 </script>
 

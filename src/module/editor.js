@@ -33,10 +33,15 @@ const destroyEditor = (c, n) => {
     c.removeChild(c.querySelector(`editor[eid='${n}']`))
 }
 
+
 const getEditor = n => ins[n]
+const getCurrent = () => cur
 const currentEditor = () => ins[cur]
+
+const resizeEditor = (n, o) => ins[n].layout(o)
 
 module.exports = {
     createEditor, destroyEditor,
-    getEditor, currentEditor
+    getEditor, getCurrent, currentEditor,
+    resizeEditor
 }
